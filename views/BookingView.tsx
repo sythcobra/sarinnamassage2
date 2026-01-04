@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck, Phone } from 'lucide-react';
 import { BRAND, getServices } from '../constants';
-import { BookingState } from '../types';
+import { BookingState, Service } from '../types';
 import Button from '../components/Button';
 import { useLanguage } from '../LanguageContext';
 
@@ -24,7 +24,8 @@ const BookingView = () => {
   const prevStep = () => setBooking(prev => ({ ...prev, step: prev.step - 1 }));
 
   const timeSlots = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
-  const durations = [`60 ${t.booking.minutes}`, `90 ${t.booking.minutes}`, `120 ${t.booking.minutes}`];
+  // Extended durations to include 30 minutes
+  const durations = [`30 ${t.booking.minutes}`, `60 ${t.booking.minutes}`, `90 ${t.booking.minutes}`, `120 ${t.booking.minutes}`];
 
   const generateWhatsAppLink = () => {
     const text = `Hello, I would like to book a ${booking.treatment} for ${booking.duration} on ${booking.date} at ${booking.time}.`;
@@ -71,7 +72,6 @@ const BookingView = () => {
         const isDisabled = isDateDisabled(date);
         
         // Check if this date is the currently selected booking date
-        // Note: Simple string check for highlighting consistency
         const dateStr = date.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-GB', { 
             weekday: 'short', 
             day: 'numeric', 
@@ -140,6 +140,30 @@ const BookingView = () => {
             </div>
         </div>
     );
+  };
+
+  // Helper to filter services based on selected duration
+  const getAvailableServices = () => {
+    if (!booking.duration) return [];
+    
+    // Extract number from duration string (e.g., "60 Minutes" -> 60)
+    const minutes = parseInt(booking.duration);
+    
+    return services.filter(s => {
+      if (minutes === 30) return s.price30 !== undefined;
+      if (minutes === 60) return s.price60 !== undefined;
+      if (minutes === 90) return s.price90 !== undefined;
+      if (minutes === 120) return s.price120 !== undefined;
+      return false;
+    }).map(s => {
+      // Return service with a specific 'currentPrice' property for easier rendering
+      let currentPrice = 0;
+      if (minutes === 30) currentPrice = s.price30!;
+      if (minutes === 60) currentPrice = s.price60!;
+      if (minutes === 90) currentPrice = s.price90!;
+      if (minutes === 120) currentPrice = s.price120!;
+      return { ...s, currentPrice };
+    });
   };
 
   // Progress Bar Component
@@ -277,7 +301,7 @@ const BookingView = () => {
                <div className="animate-fade-in flex-1 flex flex-col h-full">
                   <h3 className="text-2xl font-serif font-bold mb-6 text-charcoal">{t.booking.step4}</h3>
                   <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-3 max-h-[400px]">
-                    {services.map((s) => (
+                    {getAvailableServices().map((s) => (
                       <button 
                         key={s.id}
                         onClick={() => {
@@ -288,11 +312,17 @@ const BookingView = () => {
                       >
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1">
                            <span className="font-bold text-lg text-primary group-hover:text-accent transition-colors">{s.name}</span>
-                           <span className="text-sm font-bold text-stone-400 bg-stone-100 px-2 py-1 rounded inline-block w-fit mt-1 sm:mt-0">{t.booking.from} ฿{s.price60}</span>
+                           <span className="text-sm font-bold text-stone-400 bg-stone-100 px-2 py-1 rounded inline-block w-fit mt-1 sm:mt-0">฿{s.currentPrice}</span>
                         </div>
                         <span className="text-sm text-stone-500 leading-relaxed block">{s.description}</span>
                       </button>
                     ))}
+                    {getAvailableServices().length === 0 && (
+                        <div className="text-center text-stone-500 py-10">
+                            No treatments available for the selected duration ({booking.duration}).
+                            <br/>Please go back and select a different duration.
+                        </div>
+                    )}
                   </div>
                </div>
             )}

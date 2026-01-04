@@ -16,43 +16,42 @@ export const getServices = (lang: Language): Service[] => {
   return [
     {
       id: "thai",
-      name: isThai ? "นวดแผนไทย" : "Traditional Thai Massage",
+      name: isThai ? "นวดแผนไทย" : "Thai Massage",
       description: isThai 
-        ? "ศาสตร์การรักษาแบบโบราณที่ผสมผสานการกดจุด หลักอายุรเวทของอินเดีย และท่าโยคะ" 
-        : "An ancient healing system combining acupressure, Indian Ayurvedic principles, and assisted yoga postures.",
-      price60: 500,
-      price90: 750,
-      price120: 1000,
+        ? "ศาสตร์การรักษาแบบโบราณที่ช่วยปรับสมดุลร่างกายและพลังงานด้วยการกดจุดและยืดเหยียด" 
+        : "Traditional ancient healing therapy using acupressure and stretching to balance body and energy.",
+      price60: 499,
+      price90: 699,
+      price120: 899,
       stats: {
         relaxation: 6,
-        pressure: 9,
-        healthFocus: isThai ? ["ความยืดหยุ่น", "การไหลเวียนพลังงาน", "ความตึงเครียดของกล้ามเนื้อ"] : ["Flexibility", "Energy Flow", "Muscle Tension"],
+        pressure: 8,
+        healthFocus: isThai ? ["ความยืดหยุ่น", "การไหลเวียนพลังงาน", "คลายปวดเมื่อย"] : ["Flexibility", "Energy Flow", "Muscle Relief"],
       },
     },
     {
-      id: "aroma",
-      name: isThai ? "นวดน้ำมันอโรมา" : "Aroma Oil Massage",
+      id: "thai_balm",
+      name: isThai ? "นวดไทยยาหม่อง" : "Thai Balm Massage",
       description: isThai
-        ? "การนวดบำบัดอย่างอ่อนโยนโดยใช้น้ำมันหอมระเหยเพื่อกระตุ้นประสาทสัมผัสและผ่อนคลายร่างกาย"
-        : "A gentle therapeutic massage using essential oils to stimulate the senses and relax the body.",
-      price60: 800,
-      price90: 1100,
-      price120: 1400,
+        ? "เพิ่มประสิทธิภาพการนวดไทยด้วยยาหม่องสมุนไพรสูตรเย็น ช่วยคลายกล้ามเนื้อที่ตึงเครียดได้ดียิ่งขึ้น"
+        : "Enhanced Traditional Thai massage using cooling herbal balm to deeply relieve muscle tension and inflammation.",
+      price60: 599,
+      price90: 849,
+      price120: 1099,
       stats: {
-        relaxation: 10,
-        pressure: 3,
-        healthFocus: isThai ? ["คลายเครียด", "สุขภาพผิว", "ความสงบทางจิตใจ"] : ["Stress Relief", "Skin Health", "Mental Calm"],
+        relaxation: 7,
+        pressure: 8,
+        healthFocus: isThai ? ["ลดการอักเสบ", "คลายกล้ามเนื้อ", "สดชื่น"] : ["Inflammation", "Deep Tension", "Cooling"],
       },
     },
     {
       id: "foot",
-      name: isThai ? "นวดเท้า (กดจุด)" : "Foot Massage (Reflexology)",
+      name: isThai ? "นวดเท้า" : "Foot Massage",
       description: isThai
-        ? "เน้นจุดกดบนฝ่าเท้าเพื่อรักษาหรือป้องกันโรคและส่งเสริมสุขภาพโดยรวม"
-        : "Focuses on specific pressure points on the feet to cure or prevent disease and promote overall health.",
-      price60: 450,
-      price90: 650,
-      price120: 850,
+        ? "กระตุ้นจุดสะท้อนบนฝ่าเท้าเพื่อปรับสมดุลการทำงานของอวัยวะภายในและผ่อนคลายความเมื่อยล้า"
+        : "Stimulates reflex points on the feet to promote overall health, internal organ balance, and relaxation.",
+      price60: 499,
+      price90: 699,
       stats: {
         relaxation: 8,
         pressure: 7,
@@ -60,42 +59,122 @@ export const getServices = (lang: Language): Service[] => {
       },
     },
     {
-      id: "herbal",
-      name: isThai ? "นวดประคบสมุนไพร" : "Herbal Compress Massage",
+      id: "neck_shoulder_foot",
+      name: isThai ? "นวดคอ บ่า ไหล่ และเท้า" : "Neck, Shoulder and Foot Massage",
       description: isThai
-        ? "สมุนไพรบำบัดที่คัดสรรมาอย่างดี ห่อในลูกประคบผ้ามัสลิน นึ่งและประคบบนร่างกาย"
-        : "A selection of therapeutic herbs, wrapped in a muslin compress, steamed and applied to the body.",
-      price60: 900,
-      price90: 1250,
-      price120: 1600,
+        ? "การผสมผสานที่ลงตัวสำหรับการผ่อนคลายความตึงเครียดจากการทำงานของร่างกายส่วนบนและเท้า"
+        : "The perfect combination treatment to relieve upper body tension from office work and tired feet.",
+      price60: 599,
+      price90: 849,
+      stats: {
+        relaxation: 8,
+        pressure: 7,
+        healthFocus: isThai ? ["ออฟฟิศซินโดรม", "ผ่อนคลายครบวงจร"] : ["Office Syndrome", "Total Relief"],
+      },
+    },
+    {
+      id: "sarinna_sig",
+      name: isThai ? "สารินนา ซิกเนเจอร์ (แรงปานกลาง)" : "Sarinna Signature Massage (Medium Pressure)",
+      description: isThai
+        ? "เอกลักษณ์เฉพาะของสารินนา ผสมผสานเทคนิคตะวันออกและตะวันตก เน้นแรงกดปานกลางเพื่อความผ่อนคลายสูงสุด"
+        : "Our unique signature blend combining Eastern and Western techniques, focusing on medium pressure for optimal balance.",
+      price60: 799,
+      price90: 1149,
+      price120: 1499,
       stats: {
         relaxation: 9,
         pressure: 5,
-        healthFocus: isThai ? ["การอักเสบ", "บรรเทาอาการปวด", "ดีท็อกซ์"] : ["Inflammation", "Pain Relief", "Detox"],
+        healthFocus: isThai ? ["สมดุลร่างกาย", "คลายเครียด", "ฟื้นฟู"] : ["Body Balance", "De-stress", "Revitalize"],
       },
     },
     {
       id: "deep",
-      name: isThai ? "นวดรีดเส้น (Deep Tissue)" : "Deep Tissue Massage",
+      name: isThai ? "นวดรีดเส้น (แรงหนัก)" : "Deep Tissue Massage (Strong Pressure)",
       description: isThai
-        ? "คล้ายกับการนวดสวีดิช แต่ใช้แรงกดที่ลึกกว่าเพื่อคลายความตึงเครียดของกล้ามเนื้อเรื้อรัง"
-        : "Similar to Swedish massage, but the deeper pressure is beneficial in releasing chronic muscle tension.",
-      price60: 900,
-      price90: 1300,
-      price120: 1700,
+        ? "เน้นการกดจุดลึกเพื่อคลายกล้ามเนื้อชั้นลึกและพังผืด เหมาะสำหรับผู้ที่มีอาการปวดเรื้อรัง"
+        : "Focuses on deep layers of muscle and connective tissue to release chronic tension and knots.",
+      price60: 899,
+      price90: 1349,
+      price120: 1749,
       stats: {
         relaxation: 5,
         pressure: 10,
-        healthFocus: isThai ? ["ปวดเรื้อรัง", "ฟื้นฟูกล้ามเนื้อ", "หลังออกกำลังกาย"] : ["Chronic Pain", "Muscle Recovery", "Post-Workout"],
+        healthFocus: isThai ? ["ปวดเรื้อรัง", "ฟื้นฟูกล้ามเนื้อ", "หลังออกกำลังกาย"] : ["Chronic Pain", "Muscle Recovery", "Sports Recovery"],
+      },
+    },
+    {
+      id: "aroma",
+      name: isThai ? "นวดอโรมาผ่อนคลาย (แรงเบา)" : "Aroma Relaxing Oil Massage (Light Pressure)",
+      description: isThai
+        ? "การนวดบำบัดอย่างอ่อนโยนโดยใช้น้ำมันหอมระเหยเกรดพรีเมียม เพื่อกระตุ้นประสาทสัมผัสและผ่อนคลาย"
+        : "A gentle therapeutic massage using premium essential oils to stimulate the senses and deeply relax the mind.",
+      price60: 699,
+      price90: 999,
+      price120: 1299,
+      stats: {
+        relaxation: 10,
+        pressure: 3,
+        healthFocus: isThai ? ["คลายเครียด", "สุขภาพผิว", "นอนหลับสบาย"] : ["Stress Relief", "Skin Health", "Better Sleep"],
+      },
+    },
+    {
+      id: "coconut",
+      name: isThai ? "นวดน้ำมันมะพร้าว (แรงปานกลาง)" : "Coconut Oil Massage (Medium Pressure)",
+      description: isThai
+        ? "ปรนนิบัติผิวด้วยน้ำมันมะพร้าวบริสุทธิ์ ช่วยให้ผิวชุ่มชื้นพร้อมผ่อนคลายกล้ามเนื้อด้วยแรงกดปานกลาง"
+        : "Nourishing massage using virgin coconut oil to deeply hydrate the skin while relaxing muscles with medium pressure.",
+      price60: 799,
+      price90: 1149,
+      price120: 1499,
+      stats: {
+        relaxation: 9,
+        pressure: 5,
+        healthFocus: isThai ? ["ผิวพรรณ", "ชุ่มชื้น", "ผ่อนคลาย"] : ["Skin Hydration", "Glowing Skin", "Relaxation"],
+      },
+    },
+    {
+      id: "head_coco",
+      name: isThai ? "นวดศีรษะน้ำมันมะพร้าว" : "Head Massage with Coconut Oil",
+      description: isThai
+        ? "ผ่อนคลายความเครียดสะสมบริเวณศีรษะด้วยน้ำมันมะพร้าวอุ่น ช่วยบำรุงเส้นผมและหนังศีรษะ"
+        : "Relieves accumulated stress and headaches using warm coconut oil, also beneficial for hair and scalp health.",
+      price30: 299,
+      stats: {
+        relaxation: 9,
+        pressure: 4,
+        healthFocus: isThai ? ["ลดไมเกรน", "บำรุงผม", "หลับสบาย"] : ["Migraine Relief", "Hair Care", "Sleep Aid"],
+      },
+    },
+    {
+      id: "neck_shoulder",
+      name: isThai ? "นวดคอ บ่า ไหล่" : "Neck and Shoulder Massage",
+      description: isThai
+        ? "เน้นเฉพาะจุดเพื่อบรรเทาอาการปวดตึงบริเวณคอและไหล่จากการทำงานหรือความเครียด"
+        : "Focused massage treatment to relieve stiffness and acute pain in the neck and shoulder area.",
+      price30: 299,
+      stats: {
+        relaxation: 7,
+        pressure: 6,
+        healthFocus: isThai ? ["ออฟฟิศซินโดรม", "คลายเส้น", "ลดปวด"] : ["Stiff Neck", "Tension Release", "Pain Relief"],
+      },
+    },
+    {
+      id: "foot_add",
+      name: isThai ? "นวดเท้า (เพิ่มเติม)" : "Foot Massage (Additional Service)",
+      description: isThai
+        ? "บริการเสริมสำหรับการนวดเท้า 30 นาที เพื่อความผ่อนคลายที่รวดเร็ว"
+        : "A 30-minute add-on service for quick foot relaxation and recovery.",
+      price30: 299,
+      stats: {
+        relaxation: 7,
+        pressure: 6,
+        healthFocus: isThai ? ["ผ่อนคลายเท้า"] : ["Quick Relief"],
       },
     },
   ];
 };
 
 export const getReviews = (lang: Language): Review[] => {
-  // Reviews generally stay in their original language, but we can simulate localization or just keep them mixed.
-  // For a seamless experience, let's keep the names/dates but assume reviews are international.
-  // However, for this demo, let's return the same array as it's content generation.
   return REVIEWS; 
 };
 
@@ -143,6 +222,5 @@ export const REVIEWS: Review[] = [
     date: "3 weeks ago",
   },
 ];
-// (Keeping list short for constants file brevity, logic handles full list)
 
-export const SERVICES: Service[] = getServices('en'); // Default fallback
+export const SERVICES: Service[] = getServices('en');

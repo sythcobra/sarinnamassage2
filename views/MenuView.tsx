@@ -6,6 +6,19 @@ import SectionTitle from '../components/SectionTitle';
 import ProgressBar from '../components/ProgressBar';
 import { useLanguage } from '../LanguageContext';
 
+interface PricingBlockProps {
+  minutes: string;
+  price: number;
+  label: string;
+}
+
+const PricingBlock = ({ minutes, price, label }: PricingBlockProps) => (
+  <div className="bg-stone-50 p-2 rounded-lg border border-stone-200 min-w-[70px] sm:min-w-[80px] flex-1">
+    <span className="block text-[10px] sm:text-xs text-stone-500 uppercase">{minutes} {label}</span>
+    <span className="block font-bold text-charcoal text-sm sm:text-base">฿{price}</span>
+  </div>
+);
+
 const MenuView = ({ navigate }: { navigate: (page: PageView) => void }) => {
   const { t, language } = useLanguage();
   const services = getServices(language);
@@ -19,30 +32,24 @@ const MenuView = ({ navigate }: { navigate: (page: PageView) => void }) => {
           {services.map((service) => (
             <div key={service.id} className="bg-white rounded-2xl p-6 md:p-8 shadow-md flex flex-col md:flex-row gap-8 hover:shadow-xl transition-shadow duration-300 border border-stone-100">
               {/* Info Side */}
-              <div className="flex-1">
+              <div className="flex-1 flex flex-col">
                 <h3 className="font-serif text-2xl text-primary font-bold mb-2">{service.name}</h3>
-                <p className="text-gray-600 text-sm mb-6 leading-relaxed">{service.description}</p>
+                <p className="text-gray-600 text-sm mb-6 leading-relaxed flex-grow">{service.description}</p>
                 
-                <div className="grid grid-cols-3 gap-2 mb-6 text-center">
-                  <div className="bg-stone-50 p-2 rounded-lg border border-stone-200">
-                    <span className="block text-[10px] sm:text-xs text-stone-500 uppercase">60 {t.booking.minutes}</span>
-                    <span className="block font-bold text-charcoal text-sm sm:text-base">฿{service.price60}</span>
-                  </div>
-                  <div className="bg-stone-50 p-2 rounded-lg border border-stone-200">
-                    <span className="block text-[10px] sm:text-xs text-stone-500 uppercase">90 {t.booking.minutes}</span>
-                    <span className="block font-bold text-charcoal text-sm sm:text-base">฿{service.price90}</span>
-                  </div>
-                  <div className="bg-stone-50 p-2 rounded-lg border border-stone-200">
-                    <span className="block text-[10px] sm:text-xs text-stone-500 uppercase">120 {t.booking.minutes}</span>
-                    <span className="block font-bold text-charcoal text-sm sm:text-base">฿{service.price120}</span>
-                  </div>
+                <div className="flex flex-wrap gap-2 mb-6 text-center">
+                  {service.price30 && <PricingBlock minutes="30" price={service.price30} label={t.booking.minutes} />}
+                  {service.price60 && <PricingBlock minutes="60" price={service.price60} label={t.booking.minutes} />}
+                  {service.price90 && <PricingBlock minutes="90" price={service.price90} label={t.booking.minutes} />}
+                  {service.price120 && <PricingBlock minutes="120" price={service.price120} label={t.booking.minutes} />}
                 </div>
 
-                <Button fullWidth onClick={() => navigate('booking')}>{t.menu.bookBtn}</Button>
+                <div className="mt-auto">
+                    <Button fullWidth onClick={() => navigate('booking')}>{t.menu.bookBtn}</Button>
+                </div>
               </div>
 
               {/* Stats Side */}
-              <div className="w-full md:w-48 bg-stone-50 rounded-xl p-4 border border-stone-200 flex flex-col justify-center">
+              <div className="w-full md:w-48 bg-stone-50 rounded-xl p-4 border border-stone-200 flex flex-col justify-center shrink-0">
                 <h4 className="font-serif text-charcoal font-bold mb-4 text-center">{t.menu.intensity}</h4>
                 
                 <ProgressBar label={t.homeMenu.relax} value={service.stats.relaxation} colorClass="bg-accent" />
