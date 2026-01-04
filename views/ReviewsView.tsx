@@ -12,7 +12,7 @@ const ReviewsView = () => {
   const stats = [
     { label: "Service", score: 5.0 },
     { label: "Cleanliness", score: 5.0 },
-    { label: "Atmosphere", score: 4.9 },
+    { label: "Atmosphere", score: 5.0 },
   ];
 
   const handleNext = () => {
@@ -46,12 +46,12 @@ const ReviewsView = () => {
               </p>
               
               <div className="flex items-center gap-4 justify-center md:justify-start">
-                <div className="text-5xl font-serif font-bold text-white">4.9</div>
+                <div className="text-5xl font-serif font-bold text-white">5.0</div>
                 <div className="flex flex-col items-start">
                   <div className="flex text-accent mb-1">
                     {[1,2,3,4,5].map(i => <Star key={i} size={20} fill="currentColor" />)}
                   </div>
-                  <span className="text-sm text-stone-300">Based on 150+ Google Reviews</span>
+                  <span className="text-sm text-stone-300">Based on 255+ Google Reviews</span>
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@ const ReviewsView = () => {
                   <div key={stat.label}>
                     <div className="flex justify-between text-sm mb-1 text-stone-200">
                       <span>{stat.label}</span>
-                      <span className="font-bold">{stat.score}</span>
+                      <span className="font-bold">{stat.score.toFixed(1)}</span>
                     </div>
                     <div className="w-full bg-black/20 rounded-full h-1.5">
                       <div 

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck, Star } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck } from 'lucide-react';
 import { BRAND, getServices } from '../constants';
 import { BookingState } from '../types';
 import Button from '../components/Button';
-import SectionTitle from '../components/SectionTitle';
 import { useLanguage } from '../LanguageContext';
 
 const BookingView = () => {
@@ -18,32 +17,133 @@ const BookingView = () => {
     treatment: ''
   });
 
+  // State for Calendar Navigation
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
   const nextStep = () => setBooking(prev => ({ ...prev, step: prev.step + 1 }));
   const prevStep = () => setBooking(prev => ({ ...prev, step: prev.step - 1 }));
-
-  // Generate next 7 days
-  const getDates = () => {
-    const dates = [];
-    for(let i=0; i<7; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() + i);
-      dates.push(d);
-    }
-    return dates;
-  };
 
   const timeSlots = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
   const durations = [`60 ${t.booking.minutes}`, `90 ${t.booking.minutes}`, `120 ${t.booking.minutes}`];
 
   const generateWhatsAppLink = () => {
-    // Keep message in English format for international reception standards, or could be translated if preferred.
-    // Generally easier for staff if standardized.
     const text = `Hello, I would like to book a ${booking.treatment} for ${booking.duration} on ${booking.date} at ${booking.time}.`;
     return `https://wa.me/${BRAND.phoneIntl}?text=${encodeURIComponent(text)}`;
   };
   
   const generateLineLink = () => {
      return `https://line.me/ti/p/~${BRAND.phone}`; 
+  };
+
+  // --- Calendar Logic ---
+  const isDateDisabled = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
+  const changeMonth = (offset: number) => {
+    const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + offset, 1);
+    // Prevent going back past current month
+    const today = new Date();
+    if (offset < 0 && newDate.getMonth() < today.getMonth() && newDate.getFullYear() === today.getFullYear()) {
+        return;
+    }
+    setCurrentMonth(newDate);
+  };
+
+  const renderCalendar = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 = Sunday
+    
+    const days = [];
+    
+    // Header for Days of Week
+    const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    // Empty slots for previous month padding
+    for (let i = 0; i < firstDayOfMonth; i++) {
+        days.push(<div key={`empty-${i}`} className="aspect-square" />);
+    }
+
+    // Days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const isDisabled = isDateDisabled(date);
+        
+        // Check if this date is the currently selected booking date
+        // Note: Simple string check for highlighting consistency
+        const dateStr = date.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-GB', { 
+            weekday: 'short', 
+            day: 'numeric', 
+            month: 'short', 
+            year: 'numeric' 
+        });
+        
+        const isSelected = booking.date === dateStr;
+
+        days.push(
+            <button
+                key={day}
+                disabled={isDisabled}
+                onClick={() => {
+                    setBooking(prev => ({ ...prev, date: dateStr }));
+                    nextStep();
+                }}
+                className={`
+                    aspect-square rounded-full flex flex-col items-center justify-center text-sm font-bold transition-all relative
+                    ${isDisabled ? 'text-stone-300 cursor-not-allowed' : 'hover:bg-accent/20 text-charcoal'}
+                    ${isSelected ? 'bg-primary text-white hover:bg-primary shadow-lg scale-105' : ''}
+                    ${!isDisabled && !isSelected ? 'hover:scale-110' : ''}
+                `}
+            >
+                <span className={`text-sm md:text-base ${isSelected ? 'text-white' : ''}`}>{day}</span>
+                {/* Today marker */}
+                {new Date().toDateString() === date.toDateString() && !isSelected && (
+                    <span className="w-1 h-1 bg-accent rounded-full mt-1"></span>
+                )}
+            </button>
+        );
+    }
+
+    return (
+        <div className="w-full">
+            {/* Calendar Header Controls */}
+            <div className="flex items-center justify-between mb-6 px-2">
+                <button 
+                    onClick={() => changeMonth(-1)} 
+                    disabled={currentMonth.getMonth() === new Date().getMonth() && currentMonth.getFullYear() === new Date().getFullYear()}
+                    className="p-2 hover:bg-stone-100 rounded-full transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-primary"
+                >
+                    <ChevronLeft size={24} />
+                </button>
+                <h4 className="text-lg md:text-xl font-serif font-bold text-charcoal capitalize">
+                    {currentMonth.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', { month: 'long', year: 'numeric' })}
+                </h4>
+                <button 
+                    onClick={() => changeMonth(1)} 
+                    className="p-2 hover:bg-stone-100 rounded-full transition-colors text-primary"
+                >
+                    <ChevronRight size={24} />
+                </button>
+            </div>
+
+            {/* Weekday Headers */}
+            <div className="grid grid-cols-7 mb-2 text-center">
+                {weekDays.map(d => (
+                    <span key={d} className="text-[10px] md:text-xs font-bold text-stone-400 uppercase tracking-widest">{d}</span>
+                ))}
+            </div>
+
+            {/* Days Grid */}
+            <div className="grid grid-cols-7 gap-1 md:gap-2">
+                {days}
+            </div>
+        </div>
+    );
   };
 
   // Progress Bar Component
@@ -115,29 +215,16 @@ const BookingView = () => {
           <Steps />
 
           <div className="flex-1 flex flex-col">
-            {/* STEP 1: DATE */}
+            {/* STEP 1: DATE (CALENDAR) */}
             {booking.step === 1 && (
               <div className="animate-fade-in flex-1">
                 <h3 className="text-2xl font-serif font-bold mb-6 text-charcoal">{t.booking.step1}</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {getDates().map((date, idx) => {
-                     const isSelected = booking.date === date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-                     return (
-                      <button 
-                        key={idx}
-                        onClick={() => {
-                          setBooking(prev => ({ ...prev, date: date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) }));
-                          nextStep();
-                        }}
-                        className={`p-4 rounded-xl border transition-all text-center group ${isSelected ? 'border-accent bg-accent text-white shadow-md' : 'border-stone-200 hover:border-accent hover:bg-stone-50'}`}
-                      >
-                        <span className={`block text-xs uppercase font-bold mb-1 ${isSelected ? 'text-white/80' : 'text-stone-400'}`}>{date.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', { weekday: 'short' })}</span>
-                        <span className={`block text-2xl font-serif font-bold ${isSelected ? 'text-white' : 'text-primary'}`}>{date.getDate()}</span>
-                        <span className={`block text-xs ${isSelected ? 'text-white/80' : 'text-stone-400'}`}>{date.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', { month: 'short' })}</span>
-                      </button>
-                    );
-                  })}
+                <div className="bg-white border border-stone-200 rounded-2xl p-4 md:p-6 shadow-sm">
+                    {renderCalendar()}
                 </div>
+                <p className="text-center text-stone-400 text-xs mt-4">
+                    * Select a date to proceed to time selection.
+                </p>
               </div>
             )}
 

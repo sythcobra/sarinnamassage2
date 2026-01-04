@@ -154,7 +154,7 @@ const HomeView = ({ navigate }: { navigate: (page: PageView) => void }) => {
              {/* Left: Summary */}
              <div className="text-center lg:text-left">
                 <div className="inline-block bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
-                   <span className="text-6xl font-serif font-bold text-white block mb-2">4.9</span>
+                   <span className="text-6xl font-serif font-bold text-white block mb-2">5.0</span>
                    <div className="flex gap-1 text-accent justify-center mb-4">
                      {[1,2,3,4,5].map(i => <Star key={i} fill="currentColor" size={24} />)}
                    </div>
@@ -195,24 +195,35 @@ const HomeView = ({ navigate }: { navigate: (page: PageView) => void }) => {
       {/* --- LOCATION / CTA SECTION --- */}
       <section className="py-16 md:py-24 px-6 bg-stone-100">
         <div className="max-w-5xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
-          <div className="md:w-1/2 min-h-[250px] md:min-h-[300px] relative">
-             <img 
-               src="https://images.unsplash.com/photo-1571896349842-68cfd31b176e?q=80&w=2070&auto=format&fit=crop" 
-               alt="Sathorn Bangkok" 
-               className="absolute inset-0 w-full h-full object-cover"
-             />
-             <div className="absolute inset-0 bg-primary/80 flex items-center justify-center p-8 text-center">
-               <div>
-                  <MapPin size={48} className="text-accent mx-auto mb-4" />
-                  <h3 className="text-white font-serif text-3xl font-bold mb-2">{t.location.visit}</h3>
-                  <p className="text-stone-200 mb-6">{BRAND.trustAnchor}</p>
+          
+          {/* Left Side: Map + Address Info */}
+          <div className="md:w-1/2 flex flex-col">
+             {/* Map Container */}
+             <div className="h-[300px] relative bg-stone-200">
+                 <iframe 
+                   src="https://maps.google.com/maps?q=Sarinna%20Thai%20Massage%2C%20Bangkok&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                   width="100%" 
+                   height="100%" 
+                   style={{border:0}} 
+                   allowFullScreen 
+                   loading="lazy" 
+                   referrerPolicy="no-referrer-when-downgrade"
+                   className="absolute inset-0 w-full h-full"
+                 ></iframe>
+             </div>
+             
+             {/* Info Container (Moved from overlay to below map) */}
+             <div className="bg-primary text-white p-8 text-center flex-1 flex flex-col justify-center items-center">
+                  <MapPin size={32} className="text-accent mb-3" />
+                  <h3 className="font-serif text-2xl font-bold mb-2">{t.location.visit}</h3>
+                  <p className="text-stone-200 mb-6 text-sm max-w-xs">{BRAND.trustAnchor}</p>
                   <Button variant="outline" onClick={() => navigate('contact')} className="border-white text-white hover:bg-white hover:!text-primary transition-colors duration-300">
                     {t.location.getDir}
                   </Button>
-               </div>
              </div>
           </div>
           
+          {/* Right Side: CTA (Existing) */}
           <div className="md:w-1/2 p-10 md:p-16 flex flex-col justify-center text-center md:text-left">
              <h2 className="font-serif text-3xl md:text-4xl font-bold text-charcoal mb-4">{t.location.ready}</h2>
              <p className="text-gray-600 mb-8 text-lg">

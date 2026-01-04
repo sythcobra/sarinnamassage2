@@ -26,6 +26,16 @@ const MainApp = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsMobileMenuOpen(false);
@@ -55,19 +65,39 @@ const MainApp = () => {
     }
   };
 
+  // Determine navigation appearance
+  // Use dark text if: Menu is CLOSED AND (Scrolled OR Not on Home page)
+  const useDarkNav = !isMobileMenuOpen && (scrolled || currentPage !== 'home');
+
+  const navContainerClass = isMobileMenuOpen 
+    ? 'bg-primary' // Solid background when menu is open to match menu
+    : scrolled 
+      ? 'glass py-3 shadow-md' 
+      : 'bg-transparent py-4 md:py-6';
+
+  const logoMainColor = isMobileMenuOpen || !useDarkNav ? 'text-white' : 'text-primary';
+  const logoSubColor = isMobileMenuOpen || !useDarkNav ? 'text-stone-200' : 'text-accent';
+  const navItemColor = isMobileMenuOpen || !useDarkNav ? 'text-white/90' : 'text-charcoal';
+  const navItemActiveColor = 'text-accent';
+  const burgerColor = isMobileMenuOpen || !useDarkNav ? 'text-white' : 'text-charcoal';
+  const langBorderColor = isMobileMenuOpen || !useDarkNav ? 'border-white/30 text-white' : 'border-charcoal/20 text-charcoal';
+
   return (
     <div className={`font-sans text-charcoal antialiased selection:bg-accent selection:text-white ${language === 'th' ? 'font-noto' : ''}`}>
       {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'glass py-3 shadow-md' : 'bg-transparent py-4 md:py-6'}`}>
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${navContainerClass}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
           <div 
             className="cursor-pointer flex flex-col z-50" 
-            onClick={() => setCurrentPage('home')}
+            onClick={() => {
+              setCurrentPage('home');
+              setIsMobileMenuOpen(false);
+            }}
           >
-             <span className={`font-serif text-xl md:text-2xl font-bold tracking-wide transition-colors ${scrolled || currentPage !== 'home' ? 'text-primary' : 'text-white'}`}>
+             <span className={`font-serif text-xl md:text-2xl font-bold tracking-wide transition-colors ${logoMainColor}`}>
                SARINNA
              </span>
-             <span className={`text-[0.5rem] md:text-[0.6rem] uppercase tracking-[0.3em] font-bold ${scrolled || currentPage !== 'home' ? 'text-accent' : 'text-stone-200'}`}>
+             <span className={`text-[0.5rem] md:text-[0.6rem] uppercase tracking-[0.3em] font-bold ${logoSubColor}`}>
                Thai Massage
              </span>
           </div>
@@ -79,8 +109,7 @@ const MainApp = () => {
                 key={link.value}
                 onClick={() => setCurrentPage(link.value)}
                 className={`text-sm font-bold uppercase tracking-widest hover:text-accent transition-colors ${
-                  currentPage === link.value ? 'text-accent' : 
-                  (scrolled || currentPage !== 'home' ? 'text-charcoal' : 'text-white/90')
+                  currentPage === link.value ? navItemActiveColor : navItemColor
                 }`}
               >
                 {link.label}
@@ -91,7 +120,7 @@ const MainApp = () => {
             <button 
               onClick={toggleLanguage}
               className={`flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full border transition-all ${
-                scrolled || currentPage !== 'home' 
+                useDarkNav
                   ? 'border-charcoal/20 text-charcoal hover:bg-charcoal hover:text-white' 
                   : 'border-white/30 text-white hover:bg-white hover:text-primary'
               }`}
@@ -107,17 +136,13 @@ const MainApp = () => {
           <div className="md:hidden flex items-center gap-4 z-50">
              <button 
               onClick={toggleLanguage}
-              className={`text-xs font-bold px-2 py-1 rounded border ${
-                scrolled || currentPage !== 'home' 
-                  ? 'border-charcoal/30 text-charcoal' 
-                  : 'border-white/30 text-white'
-              }`}
+              className={`text-xs font-bold px-2 py-1 rounded border transition-colors ${langBorderColor}`}
             >
               {language === 'en' ? 'TH' : 'EN'}
             </button>
 
             <button 
-              className={`${scrolled || currentPage !== 'home' ? 'text-charcoal' : 'text-white'}`}
+              className={`transition-colors ${burgerColor}`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Menu"
             >
@@ -127,17 +152,23 @@ const MainApp = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`fixed inset-0 bg-primary/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-500 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className={`fixed inset-0 bg-primary z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           {navLinks.map(link => (
             <button 
               key={link.value}
-              onClick={() => setCurrentPage(link.value)}
-              className="text-2xl font-serif text-white hover:text-accent p-2"
+              onClick={() => {
+                setCurrentPage(link.value);
+                setIsMobileMenuOpen(false);
+              }}
+              className="text-2xl font-serif text-white hover:text-accent p-2 animate-fade-in"
             >
               {link.label}
             </button>
           ))}
-          <Button onClick={() => setCurrentPage('booking')} className="px-12 mt-4 text-xl">{t.nav.bookNow}</Button>
+          <Button onClick={() => {
+            setCurrentPage('booking');
+            setIsMobileMenuOpen(false);
+          }} className="px-12 mt-4 text-xl shadow-lg shadow-black/20">{t.nav.bookNow}</Button>
         </div>
       </nav>
 
@@ -148,7 +179,7 @@ const MainApp = () => {
 
       {/* FLOATING BOOKING BUTTON (FAB) */}
       <div 
-        className={`fixed bottom-6 right-6 z-40 transition-all duration-500 ${scrolled ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
+        className={`fixed bottom-6 right-6 z-40 transition-all duration-500 ${scrolled && !isMobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
       >
         <button
           onClick={() => setCurrentPage('booking')}
