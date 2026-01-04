@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck, Phone } from 'lucide-react';
 import { BRAND, getServices } from '../constants';
 import { BookingState } from '../types';
 import Button from '../components/Button';
@@ -31,10 +31,6 @@ const BookingView = () => {
     return `https://wa.me/${BRAND.phoneIntl}?text=${encodeURIComponent(text)}`;
   };
   
-  const generateLineLink = () => {
-     return `https://line.me/ti/p/~${BRAND.phone}`; 
-  };
-
   // --- Calendar Logic ---
   const isDateDisabled = (date: Date) => {
     const today = new Date();
@@ -334,9 +330,9 @@ const BookingView = () => {
                         {t.booking.confirmWa}
                       </Button>
                     </a>
-                    <a href={generateLineLink()} target="_blank" rel="noreferrer" className="block w-full">
-                      <Button fullWidth variant="line" className="py-4 text-lg">
-                         {t.booking.confirmLine}
+                    <a href={`tel:+${BRAND.phoneIntl}`} className="block w-full">
+                      <Button fullWidth variant="secondary" className="py-4 text-lg">
+                         <Phone size={20} /> {t.booking.confirmCall}
                       </Button>
                     </a>
                   </div>
