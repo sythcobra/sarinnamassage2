@@ -6,6 +6,7 @@ export const BRAND = {
   trustAnchor: "Located in: Holiday Inn Express & Suites Bangkok Central Pier by IHG",
   phone: "080 920 1707",
   phoneIntl: "66809201707",
+  lineId: "katherlyn_h_",
   googleMapsUrl: "https://share.google/O6rAIFzLG3doUgBCk",
   instagram: "https://www.instagram.com/sarinna_thaimassage/",
   facebook: "https://www.facebook.com/p/Sarinna-Thai-Massage-61574949187902/",

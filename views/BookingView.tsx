@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck, Phone } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck, Phone, MessageCircle } from 'lucide-react';
 import { BRAND, getServices } from '../constants';
 import { BookingState, Service } from '../types';
 import Button from '../components/Button';
@@ -360,6 +360,13 @@ const BookingView = () => {
                         {t.booking.confirmWa}
                       </Button>
                     </a>
+                    
+                    <a href={`https://line.me/ti/p/~${BRAND.lineId}`} target="_blank" rel="noreferrer" className="block w-full">
+                      <Button fullWidth variant="line" className="py-4 text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                        <MessageCircle size={20} /> {t.booking.confirmLine}
+                      </Button>
+                    </a>
+
                     <a href={`tel:+${BRAND.phoneIntl}`} className="block w-full">
                       <Button fullWidth variant="secondary" className="py-4 text-lg">
                          <Phone size={20} /> {t.booking.confirmCall}
