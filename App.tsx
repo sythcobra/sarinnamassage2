@@ -39,6 +39,15 @@ const MainApp = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsMobileMenuOpen(false);
+
+    // Google Analytics Virtual Page View
+    // Cast window to any to avoid TypeScript errors with gtag
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('config', 'G-3BVNBS9XD7', {
+        page_path: `/${currentPage === 'home' ? '' : currentPage}`,
+        page_title: `Sarinna Thai Massage - ${currentPage.charAt(0).toUpperCase() + currentPage.slice(1)}`
+      });
+    }
   }, [currentPage]);
 
   const navLinks: { label: string; value: PageView }[] = [
