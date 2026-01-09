@@ -198,7 +198,7 @@ const MainApp = () => {
           <div>
             <h4 className="font-serif text-2xl mb-6 text-accent cursor-pointer" onClick={() => setCurrentPage('home')}>Sarinna Thai Massage</h4>
             <p className="text-stone-200/80 mb-6 leading-relaxed max-w-xs">
-              {language === 'th' ? 'สถานที่พักผ่อนสุดหรู ตั้งอยู่อย่างปลอดภัยภายในโรงแรมฮอลิเดย์ อินน์ เอ็กซ์เพรส สาทร' : 'A sanctuary of relaxation located securely within the Holiday Inn Express Sathorn.'}
+              {language === 'th' ? 'สถานที่พักผ่อนที่อบอุ่นและเงียบสงบ ตั้งอยู่อย่างปลอดภัยภายในโรงแรมฮอลิเดย์ อินน์ เอ็กซ์เพรส แอนด์ สวีท กรุงเทพฯ เซ็นทรัล เปียร์' : 'A cozy haven of relaxation located securely within the Holiday Inn Express & Suites Bangkok Central Pier by IHG.'}
             </p>
             <div className="flex gap-4">
                <a href={BRAND.instagram} target="_blank" rel="noreferrer" className="hover:text-accent text-stone-200 p-2 -ml-2"><Instagram /></a>
@@ -245,7 +245,7 @@ const MainApp = () => {
           {/* Column 3: Location */}
           <div>
             <h5 className="font-bold text-accent uppercase tracking-widest mb-6 text-sm">{t.footer.location}</h5>
-            <p className="text-stone-200 mb-2 font-bold">Holiday Inn Express & Suites Bangkok Central Pier</p>
+            <p className="text-stone-200 mb-2 font-bold">Holiday Inn Express & Suites Bangkok Central Pier by IHG</p>
             <p className="text-stone-200/80 leading-relaxed mb-4">{BRAND.address}</p>
             <a href={BRAND.googleMapsUrl} target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm flex items-center gap-1 py-2 inline-block">
               {t.location.getDir} <ArrowRight size={14}/>
@@ -255,9 +255,17 @@ const MainApp = () => {
           {/* Column 4: Contact */}
           <div>
              <h5 className="font-bold text-accent uppercase tracking-widest mb-6 text-sm">{t.footer.contact}</h5>
-             <p className="text-stone-200 mb-4 flex items-center gap-3">
-               <Phone size={18} className="text-accent" /> {BRAND.phone}
-             </p>
+             <div className="text-stone-200 mb-4 flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                   <Phone size={18} className="text-accent shrink-0" /> 
+                   <a href={`tel:${BRAND.phoneIntl}`} className="hover:text-white transition-colors">{BRAND.phone} (Primary)</a>
+                </div>
+                <div className="flex items-center gap-3">
+                   <Phone size={18} className="text-transparent shrink-0" /> 
+                   <a href={`tel:${BRAND.phoneSecondaryIntl}`} className="hover:text-white transition-colors">{BRAND.phoneSecondary} (Secondary)</a>
+                </div>
+             </div>
+             
              <div className="mt-8 pt-6 border-t border-white/10">
                <p className="text-stone-200/60 text-sm mb-2">
                  &copy; {new Date().getFullYear()} Sarinna Thai Massage. {t.footer.rights}

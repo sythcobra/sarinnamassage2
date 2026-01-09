@@ -81,14 +81,14 @@ const HomeView = ({ navigate }: { navigate: (page: PageView) => void }) => {
                  <div className="bg-stone-100 p-2 rounded-full text-primary"><MapPin size={20}/></div>
                  <div>
                    <h4 className="font-bold text-charcoal">{t.about.location}</h4>
-                   <p className="text-sm text-gray-500">Holiday Inn Express Sathorn</p>
+                   <p className="text-sm text-gray-500">Holiday Inn Express & Suites Bangkok Central Pier by IHG</p>
                  </div>
               </div>
               <div className="flex items-start gap-3">
                  <div className="bg-stone-100 p-2 rounded-full text-primary"><Clock size={20}/></div>
                  <div>
                    <h4 className="font-bold text-charcoal">{t.about.openDaily}</h4>
-                   <p className="text-sm text-gray-500">10:00 AM - 9:00 PM</p>
+                   <p className="text-sm text-gray-500">10:00 AM - 10:00 PM</p>
                  </div>
               </div>
             </div>

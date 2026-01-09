@@ -19,7 +19,7 @@ const VacanciesView = () => {
                <Briefcase className="w-12 h-12 mx-auto mb-4 text-accent" />
                <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">We Are Hiring</h2>
                <p className="text-stone-200 text-lg max-w-2xl mx-auto">
-                 Become a part of Bangkok's most trusted luxury massage team. We offer a supportive environment, competitive pay, and a safe location within the Holiday Inn Express Sathorn.
+                 Become a part of Bangkok's most trusted boutique massage team. We offer a supportive environment, competitive pay, and a safe location within the Holiday Inn Express & Suites Bangkok Central Pier by IHG.
                </p>
              </div>
           </div>
@@ -32,7 +32,7 @@ const VacanciesView = () => {
                     Front Desk Receptionist
                     <span className="bg-accent/10 text-accent text-xs px-2 py-1 rounded-full uppercase tracking-wider font-sans font-bold">Urgent</span>
                   </h3>
-                  <p className="text-gray-500 mt-1">Full Time • Holiday Inn Express Sathorn Location</p>
+                  <p className="text-gray-500 mt-1">Full Time • Holiday Inn Express & Suites Bangkok Central Pier by IHG</p>
                 </div>
                 <div className="mt-4 md:mt-0">
                    <span className="font-bold text-primary text-lg">Competitive Salary + Commission</span>
@@ -43,7 +43,7 @@ const VacanciesView = () => {
                 <div>
                   <h4 className="font-bold text-charcoal mb-4 flex items-center gap-2"><Sparkles size={18} className="text-accent"/> Responsibilities</h4>
                   <ul className="space-y-3">
-                    {['Warmly welcome guests and manage walk-ins.', 'Handle bookings via Phone, WhatsApp, and LINE.', 'Coordinate schedule for therapists.', 'Process payments and manage daily cash flow.', 'Maintain a clean and luxury atmosphere.'].map((item, i) => (
+                    {['Warmly welcome guests and manage walk-ins.', 'Handle bookings via Phone, WhatsApp, and LINE.', 'Coordinate schedule for therapists.', 'Process payments and manage daily cash flow.', 'Maintain a clean and relaxing atmosphere.'].map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-gray-600 text-sm">
                         <CheckCircle size={16} className="text-green-600 shrink-0 mt-0.5" />
                         {item}

@@ -23,9 +23,9 @@ const BookingView = () => {
   const nextStep = () => setBooking(prev => ({ ...prev, step: prev.step + 1 }));
   const prevStep = () => setBooking(prev => ({ ...prev, step: prev.step - 1 }));
 
-  const timeSlots = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
-  // Extended durations to include 30 minutes
-  const durations = [`30 ${t.booking.minutes}`, `60 ${t.booking.minutes}`, `90 ${t.booking.minutes}`, `120 ${t.booking.minutes}`];
+  const timeSlots = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
+  // Extended durations to include 30 minutes, removed 120 minutes
+  const durations = [`30 ${t.booking.minutes}`, `60 ${t.booking.minutes}`, `90 ${t.booking.minutes}`];
 
   const generateWhatsAppLink = () => {
     const text = `Hello, I would like to book a ${booking.treatment} for ${booking.duration} on ${booking.date} at ${booking.time}.`;
@@ -153,7 +153,6 @@ const BookingView = () => {
       if (minutes === 30) return s.price30 !== undefined;
       if (minutes === 60) return s.price60 !== undefined;
       if (minutes === 90) return s.price90 !== undefined;
-      if (minutes === 120) return s.price120 !== undefined;
       return false;
     }).map(s => {
       // Return service with a specific 'currentPrice' property for easier rendering
@@ -161,7 +160,6 @@ const BookingView = () => {
       if (minutes === 30) currentPrice = s.price30!;
       if (minutes === 60) currentPrice = s.price60!;
       if (minutes === 90) currentPrice = s.price90!;
-      if (minutes === 120) currentPrice = s.price120!;
       return { ...s, currentPrice };
     });
   };

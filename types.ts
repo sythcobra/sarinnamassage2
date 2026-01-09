@@ -7,7 +7,6 @@ export interface Service {
   price30?: number;
   price60?: number;
   price90?: number;
-  price120?: number;
   stats: {
     relaxation: number; // 0-10
     pressure: number; // 0-10 (Soft to Strong)

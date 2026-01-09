@@ -40,11 +40,16 @@ const ContactView = () => {
                    </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                   <Phone className="text-accent shrink-0" />
-                   <a href={`tel:${BRAND.phoneIntl}`} className="text-gray-600 hover:text-primary transition-colors">
-                     {BRAND.phone}
-                   </a>
+                <div className="flex items-start gap-4">
+                   <Phone className="text-accent shrink-0 mt-1" />
+                   <div className="flex flex-col gap-1">
+                     <a href={`tel:${BRAND.phoneIntl}`} className="text-gray-600 hover:text-primary transition-colors font-medium">
+                       {BRAND.phone} <span className="text-stone-400 text-sm font-normal">(Primary)</span>
+                     </a>
+                     <a href={`tel:${BRAND.phoneSecondaryIntl}`} className="text-gray-600 hover:text-primary transition-colors font-medium">
+                       {BRAND.phoneSecondary} <span className="text-stone-400 text-sm font-normal">(Secondary)</span>
+                     </a>
+                   </div>
                 </div>
 
                 <div className="flex gap-4 pt-4 border-t border-stone-100">
@@ -58,7 +63,7 @@ const ContactView = () => {
 
                 <div className="bg-stone-50 p-6 rounded-xl mt-4">
                   <p className="text-primary font-bold mb-1">Opening Hours</p>
-                  <p className="text-gray-600">Daily: 10:00 AM - 9:00 PM</p>
+                  <p className="text-gray-600">Daily: 10:00 AM - 10:00 PM</p>
                   <p className="text-sm text-stone-500 mt-2">Walk-ins Welcome, Reservations Recommended.</p>
                 </div>
              </div>

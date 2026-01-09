@@ -170,7 +170,7 @@ const ReviewsView = () => {
           <div className="relative z-10">
             <h3 className="font-serif text-3xl font-bold text-charcoal mb-4">Share Your Experience</h3>
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-              We value every piece of feedback. Your stories help us maintain the highest standards of luxury and care.
+              We value every piece of feedback. Your stories help us maintain the highest standards of comfort and care.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a 

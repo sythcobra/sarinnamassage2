@@ -40,7 +40,6 @@ const MenuView = ({ navigate }: { navigate: (page: PageView) => void }) => {
                   {service.price30 && <PricingBlock minutes="30" price={service.price30} label={t.booking.minutes} />}
                   {service.price60 && <PricingBlock minutes="60" price={service.price60} label={t.booking.minutes} />}
                   {service.price90 && <PricingBlock minutes="90" price={service.price90} label={t.booking.minutes} />}
-                  {service.price120 && <PricingBlock minutes="120" price={service.price120} label={t.booking.minutes} />}
                 </div>
 
                 <div className="mt-auto">
