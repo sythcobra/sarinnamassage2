@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck, Phone, MessageCircle } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck, Phone, MessageCircle, Users, Plus } from 'lucide-react';
 import { BRAND, getServices } from '../constants';
 import { BookingState, Service } from '../types';
 import Button from '../components/Button';
@@ -11,10 +11,12 @@ const BookingView = () => {
 
   const [booking, setBooking] = useState<BookingState>({
     step: 1,
+    guests: 1,
     date: '',
     time: '',
     duration: '',
-    treatment: ''
+    treatment: '',
+    addon: ''
   });
 
   // State for Calendar Navigation
@@ -24,11 +26,16 @@ const BookingView = () => {
   const prevStep = () => setBooking(prev => ({ ...prev, step: prev.step - 1 }));
 
   const timeSlots = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
-  // Extended durations to include 30 minutes, removed 120 minutes
-  const durations = [`30 ${t.booking.minutes}`, `60 ${t.booking.minutes}`, `90 ${t.booking.minutes}`];
+  // Removed "30 Minutes" option, restricting it to add-on only
+  const durations = [`60 ${t.booking.minutes}`, `90 ${t.booking.minutes}`];
 
   const generateWhatsAppLink = () => {
-    const text = `Hello, I would like to book a ${booking.treatment} for ${booking.duration} on ${booking.date} at ${booking.time}.`;
+    let text = `Hello, I would like to book for ${booking.guests} person(s).\n`;
+    text += `Service: ${booking.treatment} (${booking.duration})\n`;
+    if (booking.addon) {
+      text += `Add-on: ${booking.addon}\n`;
+    }
+    text += `Date: ${booking.date} at ${booking.time}`;
     return `https://wa.me/${BRAND.phoneIntl}?text=${encodeURIComponent(text)}`;
   };
   
@@ -150,26 +157,28 @@ const BookingView = () => {
     const minutes = parseInt(booking.duration);
     
     return services.filter(s => {
-      if (minutes === 30) return s.price30 !== undefined;
       if (minutes === 60) return s.price60 !== undefined;
       if (minutes === 90) return s.price90 !== undefined;
       return false;
     }).map(s => {
-      // Return service with a specific 'currentPrice' property for easier rendering
       let currentPrice = 0;
-      if (minutes === 30) currentPrice = s.price30!;
       if (minutes === 60) currentPrice = s.price60!;
       if (minutes === 90) currentPrice = s.price90!;
       return { ...s, currentPrice };
     });
   };
 
+  // Helper to get Add-on services (those with price30 but NO price60)
+  const getAddonServices = () => {
+    return services.filter(s => s.price30 !== undefined && s.price60 === undefined);
+  };
+
   // Progress Bar Component
   const Steps = () => (
     <div className="flex justify-between mb-8 relative">
       <div className="absolute top-1/2 left-0 w-full h-1 bg-stone-100 -z-10 -translate-y-1/2 rounded-full"></div>
-      <div className="absolute top-1/2 left-0 h-1 bg-accent -z-10 -translate-y-1/2 rounded-full transition-all duration-500" style={{width: `${((booking.step - 1) / 4) * 100}%`}}></div>
-      {[1, 2, 3, 4, 5].map(num => (
+      <div className="absolute top-1/2 left-0 h-1 bg-accent -z-10 -translate-y-1/2 rounded-full transition-all duration-500" style={{width: `${((booking.step - 1) / 5) * 100}%`}}></div>
+      {[1, 2, 3, 4, 5, 6].map(num => (
         <div key={num} className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
           booking.step >= num ? 'bg-accent text-white shadow-lg scale-110' : 'bg-stone-100 text-stone-400'
         }`}>
@@ -183,7 +192,7 @@ const BookingView = () => {
     <div className="pt-24 pb-20 px-4 md:px-6 bg-cream min-h-screen animate-fade-in flex items-center justify-center">
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[600px] border border-stone-100">
         
-        {/* LEFT SIDE: Visuals & Trust (Hidden on small mobile if needed, but good for trust) */}
+        {/* LEFT SIDE: Visuals & Trust */}
         <div className="hidden lg:flex w-2/5 relative bg-primary text-white p-10 flex-col justify-between overflow-hidden">
           {/* Background Image overlay */}
           <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay"></div>
@@ -224,7 +233,7 @@ const BookingView = () => {
 
         {/* RIGHT SIDE: The Wizard */}
         <div className="w-full lg:w-3/5 p-6 md:p-10 lg:p-14 flex flex-col">
-          {/* Mobile Header (Only visible on mobile when left panel is hidden) */}
+          {/* Mobile Header */}
           <div className="lg:hidden mb-6 text-center">
              <h2 className="font-serif text-2xl font-bold text-charcoal">{t.booking.leftTitle}</h2>
              <p className="text-sm text-stone-500">{t.booking.leftSubtitle}</p>
@@ -233,16 +242,32 @@ const BookingView = () => {
           <Steps />
 
           <div className="flex-1 flex flex-col">
-            {/* STEP 1: DATE (CALENDAR) */}
+            {/* STEP 1: GUESTS & DATE */}
             {booking.step === 1 && (
               <div className="animate-fade-in flex-1">
                 <h3 className="text-2xl font-serif font-bold mb-6 text-charcoal">{t.booking.step1}</h3>
+                
+                {/* Guest Count Selector */}
+                <div className="flex justify-center gap-4 mb-8">
+                  {[1, 2].map(num => (
+                    <button
+                      key={num}
+                      onClick={() => setBooking(prev => ({...prev, guests: num}))}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-xl border-2 transition-all duration-300 ${
+                        booking.guests === num 
+                          ? 'border-accent bg-accent/10 text-primary font-bold shadow-sm' 
+                          : 'border-stone-200 text-stone-400 hover:border-stone-300'
+                      }`}
+                    >
+                      <Users size={18} />
+                      {num} Person{num > 1 ? 's' : ''}
+                    </button>
+                  ))}
+                </div>
+
                 <div className="bg-white border border-stone-200 rounded-2xl p-4 md:p-6 shadow-sm">
                     {renderCalendar()}
                 </div>
-                <p className="text-center text-stone-400 text-xs mt-4">
-                    * Select a date to proceed to time selection.
-                </p>
               </div>
             )}
 
@@ -267,7 +292,7 @@ const BookingView = () => {
                </div>
             )}
 
-             {/* STEP 3: DURATION */}
+             {/* STEP 3: DURATION (Limited to 60/90) */}
              {booking.step === 3 && (
                <div className="animate-fade-in flex-1">
                   <h3 className="text-2xl font-serif font-bold mb-6 text-charcoal">{t.booking.step3}</h3>
@@ -294,7 +319,7 @@ const BookingView = () => {
                </div>
             )}
 
-            {/* STEP 4: TREATMENT */}
+            {/* STEP 4: MAIN TREATMENT */}
             {booking.step === 4 && (
                <div className="animate-fade-in flex-1 flex flex-col h-full">
                   <h3 className="text-2xl font-serif font-bold mb-6 text-charcoal">{t.booking.step4}</h3>
@@ -315,18 +340,54 @@ const BookingView = () => {
                         <span className="text-sm text-stone-500 leading-relaxed block">{s.description}</span>
                       </button>
                     ))}
-                    {getAvailableServices().length === 0 && (
-                        <div className="text-center text-stone-500 py-10">
-                            No treatments available for the selected duration ({booking.duration}).
-                            <br/>Please go back and select a different duration.
-                        </div>
-                    )}
                   </div>
                </div>
             )}
 
-            {/* STEP 5: CONFIRM */}
+            {/* STEP 5: ADD-ONS (NEW) */}
             {booking.step === 5 && (
+               <div className="animate-fade-in flex-1 flex flex-col h-full">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-serif font-bold text-charcoal">Enhance your experience?</h3>
+                    <p className="text-stone-500 text-sm">Optional: Add a 30-minute focused treatment.</p>
+                  </div>
+                  
+                  <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-3 max-h-[400px]">
+                    {getAddonServices().map((s) => (
+                      <button 
+                        key={s.id}
+                        onClick={() => {
+                          setBooking(prev => ({ ...prev, addon: s.name }));
+                          nextStep();
+                        }}
+                        className="w-full p-4 rounded-2xl border border-stone-200 hover:border-accent hover:bg-stone-50 text-left transition-all group shadow-sm bg-white flex items-center justify-between"
+                      >
+                        <div className="flex flex-col">
+                           <div className="flex items-center gap-2">
+                             <Plus size={16} className="text-accent" />
+                             <span className="font-bold text-gray-800">{s.name}</span>
+                           </div>
+                           <span className="text-xs text-stone-500 ml-6">{s.description.substring(0, 50)}...</span>
+                        </div>
+                        <span className="font-bold text-primary">฿{s.price30}</span>
+                      </button>
+                    ))}
+                    
+                    <button 
+                      onClick={() => {
+                        setBooking(prev => ({ ...prev, addon: '' }));
+                        nextStep();
+                      }}
+                      className="w-full p-4 rounded-2xl border-2 border-dashed border-stone-300 hover:border-stone-400 hover:bg-stone-50 text-stone-400 font-bold transition-all"
+                    >
+                      No Thanks, Skip
+                    </button>
+                  </div>
+               </div>
+            )}
+
+            {/* STEP 6: CONFIRM */}
+            {booking.step === 6 && (
                <div className="animate-fade-in flex-1 flex flex-col justify-center items-center text-center">
                   <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 animate-bounce-slow">
                     <CheckCircle className="w-10 h-10 text-green-600" />
@@ -338,8 +399,17 @@ const BookingView = () => {
                     <div className="absolute top-0 left-0 w-1 h-full bg-accent"></div>
                     <div className="space-y-3 text-sm md:text-base">
                       <div className="flex justify-between border-b border-stone-200 pb-2">
+                        <span className="text-stone-500">Guests</span>
+                        <span className="font-bold text-primary text-right">{booking.guests} Person{booking.guests > 1 ? 's' : ''}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-stone-200 pb-2">
                         <span className="text-stone-500">{t.booking.service}</span>
-                        <span className="font-bold text-primary text-right">{booking.treatment}</span>
+                        <div className="text-right">
+                          <span className="font-bold text-primary block">{booking.treatment}</span>
+                          {booking.addon && (
+                             <span className="text-xs text-accent font-bold block">+ {booking.addon} (30m)</span>
+                          )}
+                        </div>
                       </div>
                       <div className="flex justify-between border-b border-stone-200 pb-2">
                         <span className="text-stone-500">{t.booking.dateTime}</span>
@@ -347,7 +417,10 @@ const BookingView = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-stone-500">{t.booking.duration}</span>
-                        <span className="font-bold text-primary text-right">{booking.duration}</span>
+                        <span className="font-bold text-primary text-right">
+                          {booking.duration}
+                          {booking.addon && " + 30m"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -374,8 +447,8 @@ const BookingView = () => {
                </div>
             )}
             
-            {/* Back Button (Only for steps 2-4) */}
-            {booking.step > 1 && booking.step < 5 && (
+            {/* Back Button (Only for steps 2-5) */}
+            {booking.step > 1 && booking.step < 6 && (
               <div className="mt-6 pt-4 border-t border-stone-100">
                 <button 
                   onClick={prevStep} 

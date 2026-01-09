@@ -24,10 +24,12 @@ export interface Review {
 
 export interface BookingState {
   step: number;
+  guests: number;
   date: string;
   time: string;
   duration: string;
   treatment: string;
+  addon: string;
 }
 
 export type PageView = 'home' | 'menu' | 'reviews' | 'contact' | 'booking' | 'vacancies' | 'policy';
